@@ -29,9 +29,7 @@ class m230418_181909_createTaskBoard extends Migration
      */
     public function safeDown()
     {
-        echo "m230418_181909_createTaskBoard cannot be reverted.\n";
-
-        return false;
+        $this->dropTable('task_board');
     }
 
 }
