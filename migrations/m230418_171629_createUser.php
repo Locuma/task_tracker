@@ -21,6 +21,7 @@ class m230418_171629_createUser extends Migration
             'first_name' => $this->string(20)->notNull(),
             'second_name' => $this->string(30)->notNull(),
             'surname' => $this->string(30)->notNull(),
+            'auth_key' => $this->string()->notNull(),
         ]);
 
         $this->createIndex('idx_login', 'user', 'login');

@@ -3,35 +3,38 @@
 namespace app\models;
 use Yii;
 use yii\base\Model;
+use yii\helpers\VarDumper;
+
 class SignUpForm extends Model
 {
-    public $login;
-    public $password;
+    public string $login = '';
+    public string $first_name = '';
+    public string $second_name = '';
+    public string $surname = '';
 
-    private $_user = false;
+    public string $password = '';
 
+    public bool $remember_me = true;
 
-    /**
-     * @return array the validation rules.
-     */
-    public function rules()
+    private mixed $_user = false;
+
+    public function rules(): array
     {
         return [
-            // username and password are both required
-            [['login', 'password'], 'required'],
-            // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            [['login', 'password', 'first_name', 'second_name', 'surname'], 'required'],
+            ['login', 'filter', 'filter' => 'trim'],
+            ['login', 'isExist'],
+            ['password', 'filter', 'filter' => 'trim'],
+            ['first_name', 'filter', 'filter' => 'trim'],
+            ['second_name', 'filter', 'filter' => 'trim'],
+            ['surname', 'filter', 'filter' => 'trim'],
+            [['login'], 'string', 'max' => 13],
+            [['password', 'first_name'], 'string', 'max' => 20],
+            [['second_name', 'surname'], 'string', 'max' => 30],
         ];
     }
 
-    /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
-     *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
-     */
-    public function validatePassword($attribute, $params)
+    public function validatePassword($attribute, $params): void
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -42,30 +45,22 @@ class SignUpForm extends Model
         }
     }
 
-    /**
-     * Logs in a user using the provided username and password.
-     * @return bool whether the user is logged in successfully
-     */
-    public function login()
-    {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
-        }
-        return false;
-    }
-
-    /**
-     * Finds user by [[username]]
-     *
-     * @return User|null
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findByLogin($this->login);
+            VarDumper::dump($this->_user); exit;
         }
 
         return $this->_user;
+    }
+
+    public function isExist(): void
+    {
+        $user = User::findByLogin($this->login);
+        if ($user){
+            $this->addError('login', 'User with same login exists.');
+        }
     }
 
 }

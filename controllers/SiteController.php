@@ -2,13 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\SignUpForm;
+use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -54,22 +55,12 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex($message = 'hi')
+    public function actionIndex($message = 'hi'): string
     {
         return $this->render('index', ['message' => $message]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
+    public function actionLogin(): string|Response
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -86,19 +77,18 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * SignUp action.
-     *
-     * @return Response|string
-     */
-    public function actionSignUp()
+    public function actionSignUp(): string|Response
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        $model = new SignUpForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user = new User();
+            $user->fillUser($model);
+            $user->save();
+            Yii::$app->user->login($user);
             return $this->goBack();
         }
 
@@ -108,12 +98,7 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
+    public function actionLogout(): Response
     {
         Yii::$app->user->logout();
 

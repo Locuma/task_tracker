@@ -24,8 +24,8 @@ class UserTest extends \Codeception\Test\Unit
 
     public function testFindUserByUsername()
     {
-        verify($user = User::findByUsername('admin'))->notEmpty();
-        verify(User::findByUsername('not-admin'))->empty();
+        verify($user = User::findByLogin('admin'))->notEmpty();
+        verify(User::findByLogin('not-admin'))->empty();
     }
 
     /**
@@ -33,7 +33,7 @@ class UserTest extends \Codeception\Test\Unit
      */
     public function testValidateUser()
     {
-        $user = User::findByUsername('admin');
+        $user = User::findByLogin('admin');
         verify($user->validateAuthKey('test100key'))->notEmpty();
         verify($user->validateAuthKey('test102key'))->empty();
 
