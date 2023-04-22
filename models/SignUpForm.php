@@ -7,14 +7,12 @@ use yii\helpers\VarDumper;
 
 class SignUpForm extends Model
 {
-    public string $login = '';
-    public string $first_name = '';
-    public string $second_name = '';
-    public string $surname = '';
+    public ?string $login= null;
+    public ?string $first_name= null;
+    public ?string $second_name= null;
+    public ?string $surname= null;
 
-    public string $password = '';
-
-    public bool $remember_me = true;
+    public ?string $password= null;
 
     private mixed $_user = false;
 
@@ -49,7 +47,6 @@ class SignUpForm extends Model
     {
         if ($this->_user === false) {
             $this->_user = User::findByLogin($this->login);
-            VarDumper::dump($this->_user); exit;
         }
 
         return $this->_user;

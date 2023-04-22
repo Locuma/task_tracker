@@ -2,11 +2,10 @@
 
 /** @var yii\web\View $this */
 
-use yii\bootstrap5\Html;
+/** @var \app\controllers\SiteController $message */
 
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
-<h1>hello world</h1>
-    <?= Html::encode($message) ?>
+<h1> Hello, mate!</h1>
 </div>

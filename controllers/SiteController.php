@@ -55,7 +55,7 @@ class SiteController extends Controller
         ];
     }
 
-    public function actionIndex($message = 'hi'): string
+    public function actionIndex($message = 'Hello, mate!'): string
     {
         return $this->render('index', ['message' => $message]);
     }
@@ -89,6 +89,7 @@ class SiteController extends Controller
             $user->fillUser($model);
             $user->save();
             Yii::$app->user->login($user);
+
             return $this->goBack();
         }
 

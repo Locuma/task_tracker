@@ -36,6 +36,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         $items =
             [
                 ['label' => 'Home', 'url' => ['/site/index']],
+                ['label' => 'Boards', 'url' => ['/task-board/index']],
                 ['label' => 'Sign Up', 'url' => ['/site/sign-up']],
                 ['label' => 'Login', 'url' => ['/site/login']],
             ];
@@ -43,6 +44,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         $items =
             [
                 ['label' => 'Home', 'url' => ['/site/index']],
+                ['label' => 'Boards', 'url' => ['/task-board/index']],
                 '<li class="nav-item">'
                 . Html::beginForm(['/site/logout'])
                 . Html::submitButton(

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 
@@ -16,6 +17,26 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      * @property string $surname
      * @property string $auth_key
      */
+
+    public static function tableName(): string
+    {
+        return '{{%user}}';
+    }
+
+    public function getRole(): array|ActiveRecord
+    {
+        return $this->hasOne(Role::class, ['id' => 'id_role'])->one();
+    }
+
+    public function getTaskBoardResponsible(): ActiveQuery
+    {
+        return $this->hasMany(TaskBoard::class, ['responsible' => 'id']);
+    }
+
+    public function getTaskBoardSupervisor(): ActiveQuery
+    {
+        return $this->hasMany(TaskBoard::class, ['supervisor' => 'id']);
+    }
 
     public static function findIdentity($id): ?BaseActiveRecord
     {
