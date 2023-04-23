@@ -1,18 +1,17 @@
 <?php
 
-namespace app\models;
-use Yii;
+namespace app\models\forms;
+
+use app\models\User;
 use yii\base\Model;
-use yii\helpers\VarDumper;
 
 class SignUpForm extends Model
 {
-    public ?string $login= null;
-    public ?string $first_name= null;
-    public ?string $second_name= null;
-    public ?string $surname= null;
-
-    public ?string $password= null;
+    public ?string $login = null;
+    public ?string $first_name = null;
+    public ?string $second_name = null;
+    public ?string $surname = null;
+    public ?string $password = null;
 
     private mixed $_user = false;
 
@@ -55,7 +54,7 @@ class SignUpForm extends Model
     public function isExist(): void
     {
         $user = User::findByLogin($this->login);
-        if ($user){
+        if ($user) {
             $this->addError('login', 'User with same login exists.');
         }
     }

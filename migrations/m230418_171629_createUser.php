@@ -25,6 +25,26 @@ class m230418_171629_createUser extends Migration
         ]);
 
         $this->createIndex('idx_login', 'user', 'login');
+
+        $this->insert('user', [
+            'id_role' => 1,
+            'login' => 'user',
+            'password' => '123',
+            'first_name' => 'Ivan',
+            'second_name' => 'Ivanov',
+            'surname' => 'Ivanovich',
+            'auth_key' => \Yii::$app->security->generateRandomString(),
+        ]);
+
+        $this->insert('user', [
+            'id_role' => 2,
+            'login' => 'root',
+            'password' => '123',
+            'first_name' => 'Semen',
+            'second_name' => 'Memniy',
+            'surname' => 'Semenovich',
+            'auth_key' => \Yii::$app->security->generateRandomString(),
+        ]);
     }
 
     /**

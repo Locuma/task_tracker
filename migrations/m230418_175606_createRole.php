@@ -16,6 +16,14 @@ class m230418_175606_createRole extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(20)->notNull(),
         ]);
+
+        $this->insert('role', [
+            'name' => 'user'
+        ]);
+
+        $this->insert('role', [
+            'name' => 'admin'
+        ]);
     }
 
     /**

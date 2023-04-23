@@ -15,7 +15,7 @@ class m230421_203122_addForeignKeys extends Migration
         $this->addForeignKey(
             'fk-task_board-supervisor',
             'task_board',
-            'supervisor',
+            'id_supervisor',
             'user',
             'id',
             'CASCADE'
@@ -24,7 +24,7 @@ class m230421_203122_addForeignKeys extends Migration
         $this->addForeignKey(
             'fk-task_board-responsible',
             'task_board',
-            'responsible',
+            'id_responsible',
             'user',
             'id',
             'CASCADE'

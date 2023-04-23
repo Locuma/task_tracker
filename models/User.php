@@ -2,14 +2,17 @@
 
 namespace app\models;
 
+use app\models\forms\SignUpForm;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
+use \yii\web\IdentityInterface;
 
-class User extends ActiveRecord implements \yii\web\IdentityInterface
+class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * @property int $id
+     * @property int $id_role
      * @property string $login
      * @property string $password
      * @property string $first_name
@@ -23,9 +26,9 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
         return '{{%user}}';
     }
 
-    public function getRole(): array|ActiveRecord
+    public function getRole(): ActiveQuery
     {
-        return $this->hasOne(Role::class, ['id' => 'id_role'])->one();
+        return $this->hasOne(Role::class, ['id' => 'id_role']);
     }
 
     public function getTaskBoardResponsible(): ActiveQuery

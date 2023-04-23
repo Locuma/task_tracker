@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\models\forms;
 
+use app\models\User;
 use Yii;
 use yii\base\Model;
 
@@ -14,11 +15,8 @@ use yii\base\Model;
 class LoginForm extends Model
 {
     public string $login = '';
-
     public string $password = '';
-
     public bool $remember_me = true;
-
     private mixed $_user = false;
 
 
