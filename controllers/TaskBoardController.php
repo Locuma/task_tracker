@@ -23,10 +23,10 @@ class TaskBoardController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['create', 'update', 'delete'],
+                'only' => ['create', 'update', 'delete', 'my-task'],
                 'rules' => [
                     [
-                        'actions' => ['create', 'update', 'delete'],
+                        'actions' => ['create', 'update', 'delete', 'my-task'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -43,13 +43,13 @@ class TaskBoardController extends Controller
 
     public function actionIndex(): string
     {
-        $searchModel = new TaskBoardSearchForm();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $taskSearchModel = new TaskBoardSearchForm();
+        $taskDataProvider = $taskSearchModel->search($this->request->queryParams);
 
         return $this->render('index', [
             'tasks' => TaskBoard::find()->all(),
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'taskSearchModel' => $taskSearchModel,
+            'taskDataProvider' => $taskDataProvider,
         ]);
     }
 
@@ -62,7 +62,6 @@ class TaskBoardController extends Controller
             'task' => $this->findModel($id),
         ]);
     }
-
 
     public function actionCreate(): string|Response
     {
@@ -135,13 +134,13 @@ class TaskBoardController extends Controller
 
     public function actionMyTask(): string
     {
-        $searchModel = new TaskBoardSearchForm();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $taskSearchModel = new TaskBoardSearchForm();
+        $taskDataProvider = $taskSearchModel->search($this->request->queryParams);
 
         return $this->render('index', [
             'tasks' => TaskBoard::find()->where(['id_responsible' => \Yii::$app->user->identity->id])->all(),
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'taskSearchModel' => $taskSearchModel,
+            'taskDataProvider' => $taskDataProvider,
         ]);
     }
 }

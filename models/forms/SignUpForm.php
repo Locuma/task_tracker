@@ -53,8 +53,7 @@ class SignUpForm extends Model
 
     public function isExist(): void
     {
-        $user = User::findByLogin($this->login);
-        if ($user) {
+        if (User::findByLogin($this->login)) {
             $this->addError('login', 'User with same login exists.');
         }
     }

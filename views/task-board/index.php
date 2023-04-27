@@ -11,14 +11,14 @@ use yii\jui\DatePicker;
 
 /** @var yii\web\View $this */
 /** @var app\models\TaskBoard $tasks */
-/** @var TaskBoardSearchForm $dataProvider */
-/** @var TaskBoardSearchForm $searchModel */
+/** @var TaskBoardSearchForm $taskSearchModel */
+/** @var TaskBoardSearchForm $taskDataProvider */
 
 $this->title = 'Task Boards';
 $this->params['breadcrumbs'][] = $this->title;
 
 $user = Yii::$app->getUser()->identity;
-$isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role === 2;
+$isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role === User::ROLE_ADMIN;
 
 ?>
 <div class="task-board-index">
@@ -33,11 +33,10 @@ $isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role 
 
     <?php if ($isAdmin): ?>
 
-        <h1> *********************</h1>
-        <h1> Типа админская панель</h1>
+        <h1> Panel to search faster:</h1>
         <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
+            'dataProvider' => $taskDataProvider,
+            'filterModel' => $taskSearchModel,
             'columns' => [
                 [
                     'attribute' => 'title',
@@ -49,7 +48,8 @@ $isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role 
                     'value' => function ($task) {
                         return "{$task->supervisor->first_name} {$task->supervisor->second_name} {$task->supervisor->surname}";
                     },
-                    'filter' => Html::activeDropDownList($searchModel, 'id_supervisor', ArrayHelper::map(User::find()->all(), 'id',
+                    'label' => 'Supervisor',
+                    'filter' => Html::activeDropDownList($taskSearchModel, 'id_supervisor', ArrayHelper::map(User::find()->all(), 'id',
                         function ($responsible) {
                             return "{$responsible->first_name} {$responsible->second_name} {$responsible->surname}";
                         }
@@ -62,7 +62,8 @@ $isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role 
                     'value' => function ($model) {
                         return "{$model->responsible->first_name} {$model->responsible->second_name} {$model->responsible->surname}";
                     },
-                    'filter' => Html::activeDropDownList($searchModel, 'id_responsible', ArrayHelper::map(User::find()->all(), 'id', function ($responsible) {
+                    'label' => 'Responsible',
+                    'filter' => Html::activeDropDownList($taskSearchModel, 'id_responsible', ArrayHelper::map(User::find()->all(), 'id', function ($responsible) {
                         return "{$responsible->first_name} {$responsible->second_name} {$responsible->surname}";
                     }), ['class' => 'form-control', 'prompt' => '']),
                 ],
@@ -73,7 +74,7 @@ $isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role 
                         return Yii::$app->formatter->asDate($model->deadline, 'php:d.m.Y');
                     },
                     'filter' => DatePicker::widget([
-                        'model' => $searchModel,
+                        'model' => $taskSearchModel,
                         'attribute' => 'deadline',
                         'dateFormat' => 'yyyy-MM-dd',
                         'options' => ['class' => 'form-control'],
@@ -85,12 +86,12 @@ $isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role 
                 ['class' => 'yii\grid\ActionColumn'],
             ],
         ]); ?>
-        <h1> Конец типа админской панели</h1>
-        <h1> ***************************</h1>
+        <?= Html::tag('hr', ['class' => 'solid-line']); ?>
     <?php endif; ?>
 
-    <?php
+    <h1> Common tasks:</h1>
 
+    <?php
     if (!empty($tasks)) : ?>
         <?php foreach ($tasks as $task): ?>
 
@@ -105,9 +106,11 @@ $isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role 
                     [
                         'attribute' => 'id_supervisor',
                         'value' => $supervisorName,
+                        'label' => 'Supervisor',
                     ], [
                         'attribute' => 'id_responsible',
                         'value' => $responsibleName,
+                        'label' => 'Responsible',
                     ],
                     'deadline',
                 ],
