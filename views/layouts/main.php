@@ -4,6 +4,7 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
+use app\models\User;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
@@ -20,31 +21,35 @@ $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_k
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
 ?>
 <?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="h-100">
-<head>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
-</head>
-<body class="d-flex flex-column h-100">
+    <!DOCTYPE html>
+    <html lang="<?= Yii::$app->language ?>" class="h-100">
+    <head>
+        <title><?= Html::encode($this->title) ?></title>
+        <?php $this->head() ?>
+    </head>
+    <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
 <header id="header">
     <?php
+    $items = [
+        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'Boards', 'url' => ['/task-board/index']],
+    ];
+
+    if (!Yii::$app->user->isGuest && User::ROLE_ADMIN === Yii::$app->getUser()->identity->id_role) {
+        $items = array_merge($items, [['label' => 'Admin', 'url' => ['/site/admin']]]);
+    }
 
     if (Yii::$app->user->isGuest) {
-        $items =
+        $items = array_merge($items,
             [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'Boards', 'url' => ['/task-board/index']],
                 ['label' => 'Sign Up', 'url' => ['/site/sign-up']],
                 ['label' => 'Login', 'url' => ['/site/login']],
-            ];
+            ]);
     } else {
-        $items =
+        $items = array_merge($items,
             [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'Boards', 'url' => ['/task-board/index']],
                 '<li class="nav-item">'
                 . Html::beginForm(['/site/logout'])
                 . Html::submitButton(
@@ -53,7 +58,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 )
                 . Html::endForm()
                 . '</li>'
-            ];
+            ]);
     }
 
     NavBar::begin([

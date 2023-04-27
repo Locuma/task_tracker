@@ -33,10 +33,10 @@ $fullUsername = ArrayHelper::map($users, 'id', static function ($data) {
     <?= $form->field($taskBoardForm, 'title')->textarea(['value' => $task->title]) ?>
 
     <?= $form->field($taskBoardForm, 'id_responsible')->dropDownList($fullUsername, ['options' => [
-        $task->id_responsible => ['selected' => true]]]) ?>
+        $task->id_responsible => ['selected' => true]],])->label('Responsible') ?>
 
     <?= $form->field($taskBoardForm, 'id_supervisor')->dropDownList($fullUsername, ['options' => [
-        $task->id_supervisor => ['selected' => true]]]) ?>
+        $task->id_supervisor => ['selected' => true]]])->label('Supervisor') ?>
 
     <?= $form->field($taskBoardForm, 'deadline')->widget(DatePicker::class, [
         'dateFormat' => 'yyyy-MM-dd',

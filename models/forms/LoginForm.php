@@ -27,6 +27,7 @@ class LoginForm extends Model
     {
         return [
             [['login', 'password'], 'required'],
+            ['login', 'isExist'],
             ['remember_me', 'boolean'],
         ];
     }
@@ -47,5 +48,12 @@ class LoginForm extends Model
         }
 
         return $this->_user;
+    }
+
+    public function isExist(): void
+    {
+        if (!User::findByLogin($this->login)) {
+            $this->addError('login', 'No user with this login');
+        }
     }
 }

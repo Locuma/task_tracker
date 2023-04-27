@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\forms\LoginForm;
 use app\models\forms\SignUpForm;
+use app\models\forms\UserSearchForm;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
@@ -21,12 +22,21 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
+                'only' => ['logout', 'admin'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+
+                    [
+                        'actions' => ['admin'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->getUser()->identity->id_role === 2;
+                        }
                     ],
                 ],
             ],
@@ -55,9 +65,9 @@ class SiteController extends Controller
         ];
     }
 
-    public function actionIndex($message = 'Hello, mate!'): string
+    public function actionIndex(): string
     {
-        return $this->render('index', ['message' => $message]);
+        return $this->render('index');
     }
 
     public function actionLogin(): string|Response
@@ -104,5 +114,36 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionAdmin(): string
+    {
+        $searchTaskModel = new UserSearchForm();
+        $taskDataProvider = $searchTaskModel->search($this->request->queryParams);
+
+
+        return $this->render('admin', [
+            'searchUserModel' => $searchTaskModel,
+            'userDataProvider' => $taskDataProvider,]);
+    }
+
+    public function actionUpdateRole(): string|bool
+    {
+        if (Yii::$app->request->isPost) {
+            $roleId = (int)Yii::$app->request->post('roleId');
+            $userId = (int)Yii::$app->request->post('userId');
+
+            if (empty($roleId)){
+                return "You can't leave user without role!";
+            }
+
+            $user = User::findOne($userId);
+            $user->id_role = $roleId;
+
+            if(!$user->save()) {
+                return false;
+            }
+        }
+        return "Role changed!";
     }
 }

@@ -21,6 +21,8 @@ class User extends ActiveRecord implements IdentityInterface
      * @property string $auth_key
      */
 
+    const ROLE_ADMIN = 2;
+
     public static function tableName(): string
     {
         return '{{%user}}';

@@ -1,5 +1,6 @@
 <?php
 
+use app\models\User;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -14,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $supervisorName = "{$task->supervisor->first_name} {$task->supervisor->second_name} {$task->supervisor->surname} ";
 $responsibleName = "{$task->responsible->first_name} {$task->responsible->second_name} {$task->responsible->surname} ";
 $isResponsibleUser = !Yii::$app->user->isGuest && ($task->id_responsible === Yii::$app->user->id);
-$isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role === 2;
+$isAdmin = !Yii::$app->user->isGuest && Yii::$app->getUser()->identity->id_role === User::ROLE_ADMIN;
 
 ?>
 <div class="task-board-view">
